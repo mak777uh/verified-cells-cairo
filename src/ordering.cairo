@@ -22,9 +22,9 @@ pub impl VaultImpl of VaultTrait {
     fn withdraw_cei(ref self: Vault, amount: u256) -> u256 {
         assert(!self.in_flight, 'reentrant call');
         assert(self.balance >= amount, 'insufficient');
-        self.balance = self.balance - amount; // ЭФФЕКТ до вызова
+        self.balance = self.balance - amount; // EFFECT before the call
         self.in_flight = true;
-        // здесь был бы внешний вызов; повторный вход увидит in_flight == true
+        // an external call would happen here; a re-entrant call would see in_flight == true
         let out = amount;
         self.in_flight = false;
         out
@@ -32,7 +32,7 @@ pub impl VaultImpl of VaultTrait {
 
     /// Broken version: interacts before the effect — the classic double-spend.
     fn withdraw_broken(ref self: Vault, amount: u256) -> (u256, u256) {
-        let first = amount;                      // «вызов», затем эффект
+        let first = amount;                      // the outbound call first, then the effect
         let reentrant = if self.balance >= amount { amount } else { 0 };
         self.balance = self.balance - first;
         (first, reentrant)
@@ -42,12 +42,12 @@ pub impl VaultImpl of VaultTrait {
 pub fn run_ordering_cell() -> bool {
     let mut good = VaultTrait::new(100_u256);
     let paid = good.withdraw_cei(100);
-    // после корректного вывода баланс 0 и повторный вход невозможен
+    // after a correct withdrawal the balance is 0 and re-entry is impossible
     let safe = paid == 100 && good.balance == 0;
 
     let mut bad = VaultTrait::new(100_u256);
     let (first, reentrant) = bad.withdraw_broken(100);
-    // в сломанной версии повторный вход «видит» старый баланс и тоже платит
+    // in the broken version a re-entrant call still sees the old balance and pays again
     let bug_detected = first == 100 && reentrant == 100;
 
     safe && bug_detected

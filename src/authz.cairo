@@ -63,12 +63,12 @@ pub fn run_authorization_cell() -> bool {
 /// Returns true only if a non-owner managed to change the implementation.
 pub fn can_non_owner_upgrade(owner: felt252, attacker: felt252) -> bool {
     let mut u = UpgradeableTrait::new(owner, 'impl_v1');
-    // без модификатора доступа это был бы обход; модель обязана отклонить попытку
+    // without the access modifier this would be a bypass; the model must reject the attempt
     if attacker == owner {
         u.propose(attacker, 'evil');
         u.accept(attacker);
         return u.implementation == 'evil';
     }
-    // если бы проверки не было, вызов ниже изменил бы реализацию
+    // if the check were missing, the call below would change the implementation
     u.implementation != 'impl_v1'
 }

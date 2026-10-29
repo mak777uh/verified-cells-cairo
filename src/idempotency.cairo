@@ -55,11 +55,11 @@ pub fn run_idempotency_cell() -> bool {
     let third = box.deliver('msg_a', amount);
     let other = box.deliver('msg_b', amount);
 
-    // 1) применилась только первая доставка одного и того же id
+    // 1) only the first delivery of the same id applied
     let single_apply = first && !second && !third;
-    // 2) новый id всё ещё работает — счётчик не «залип»
+    // 2) a new id still works — the counter does not stick
     let new_id_works = other;
-    // 3) ровно две применённых доставки по 100
+    // 3) exactly two deliveries of 100 were applied
     let total_correct = box.credited == 200_u256;
 
     single_apply && new_id_works && total_correct

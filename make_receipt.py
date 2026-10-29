@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-r"""make_receipt.py — собрать детерминированную квитанцию для ячейки.
+r"""make_receipt.py — build a deterministic receipt for the cell.
 
-Квитанция связывает утверждение с каноническим хешем: версия инструментов, хеши файлов,
-точная команда и точный вывод. Любой может перезапустить и сравнить.
+The receipt binds the claim to a canonical hash: toolchain version, file hashes, the exact command and
+the exact output. Anyone can re-run it and compare.
 
     python make_receipt.py
 """
@@ -59,7 +59,7 @@ def main() -> int:
         "scarb_exit": run.returncode,
     }
     (ROOT / "RECEIPT.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"вердикт: {verdict} | квитанция: RECEIPT.json | statement_sha256: {receipt['statement_sha256'][:16]}…")
+    print(f"verdict: {verdict} | receipt: RECEIPT.json | statement_sha256: {receipt['statement_sha256'][:16]}…")
     return 0 if verdict == "PASS" else 1
 
 

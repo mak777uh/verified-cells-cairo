@@ -40,16 +40,16 @@ pub fn run_escrow_cell() -> bool {
     let amount = 500_u256;
     let deadline = 1000_u64;
 
-    // 1) до дедлайна — не платит
+    // 1) before the deadline it pays nothing
     let mut e1 = EscrowTrait::new(amount, deadline);
     let early = e1.release(999);
 
-    // 2) после дедлайна — платит ровно один раз
+    // 2) after the deadline it pays exactly once
     let mut e2 = EscrowTrait::new(amount, deadline);
     let on_time = e2.release(1000);
     let twice = e2.release(1001);
 
-    // 3) отменённый эскроу не платит никогда
+    // 3) a cancelled escrow never pays
     let mut e3 = EscrowTrait::new(amount, deadline);
     e3.cancel();
     let after_cancel = e3.release(2000);

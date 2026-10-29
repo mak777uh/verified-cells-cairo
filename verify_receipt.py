@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-r"""verify_receipt.py — проверить квитанцию: файлы не изменились и ячейка всё ещё проходит."""
+r"""verify_receipt.py — verify the receipt: files unchanged and the cell still passes."""
 from __future__ import annotations
 
 import hashlib
@@ -31,7 +31,7 @@ def main() -> int:
     stmt = hashlib.sha256(
         json.dumps({k: sha(ROOT / k) for k in sorted(r["files"])}, sort_keys=True).encode()
     ).hexdigest()
-    print(f"statement_sha256: {'совпал' if stmt == r['statement_sha256'] else 'НЕ СОВПАЛ'}")
+    print(f"statement_sha256: {'matches' if stmt == r['statement_sha256'] else 'MISMATCH'}")
     return 0 if ok and stmt == r["statement_sha256"] else 1
 
 
