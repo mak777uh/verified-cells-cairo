@@ -58,6 +58,12 @@ re-runnable, and the receipt makes the result falsifiable: change a line of the 
 
 License: MIT.
 
+## Adding your own cell
+
+`docs/ADD_A_CELL.md` takes a stranger from nothing to a passing cell in one file: pick the invariant, copy
+`src/vault.cairo`, include a broken variant so the cell can fail, wire the `CELL <name>: PASS` line, and issue
+the receipt. No contact required, which is the only test of a guide that matters.
+
 ## Why these six, and what they map to on Starknet
 
 | cell | the real risk it mirrors |
