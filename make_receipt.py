@@ -29,14 +29,18 @@ def main() -> int:
     run = subprocess.run([SCARB, "execute", "--print-program-output"], capture_output=True,
                          text=True, cwd=str(ROOT), timeout=300)
     out = (run.stdout or "") + (run.stderr or "")
-    verdict = "PASS" if out.count(": PASS") >= 3 and ": FAIL" not in out else "FAIL"
+    verdict = "PASS" if out.count(": PASS") >= 6 and ": FAIL" not in out else "FAIL"
     file_hashes = {str(p.relative_to(ROOT)).replace("\\", "/"): sha(p) for p in files}
     receipt = {
-        "cells": ["accounting_conservation", "authorization_on_upgrade", "idempotency_of_cross_calls"],
+        "cells": ["accounting_conservation", "authorization_on_upgrade", "idempotency_of_cross_calls",
+                  "escrow_release_rules", "upgrade_safety", "cross_call_ordering"],
         "what_it_claims": [
             "accounting: sum(balances) == total survives the stated deposit/withdraw sequence",
             "authorization: only the owner can change the implementation, through propose+accept",
             "idempotency: delivering the same message id twice applies the effect once",
+            "escrow: no payout before the deadline, at most one payout, none after cancel",
+            "upgrade safety: v2 keeps every slot v1 wrote at the same index (and the broken variant is caught)",
+            "ordering: a re-entrant call observes the already-updated state and is rejected",
         ],
         "what_it_does_not_claim": [
             "does not verify deployed bytecode",

@@ -5,9 +5,15 @@
 pub mod vault;
 pub mod authz;
 pub mod idempotency;
+pub mod escrow;
+pub mod upgrade_safety;
+pub mod ordering;
 
 use authz::run_authorization_cell;
+use escrow::run_escrow_cell;
 use idempotency::run_idempotency_cell;
+use ordering::run_ordering_cell;
+use upgrade_safety::run_upgrade_safety_cell;
 use vault::run_accounting_cell;
 
 /// Executable entry point: prints PASS/FAIL for every cell so a receipt binds to exact output.
@@ -30,6 +36,24 @@ fn main() -> felt252 {
         println!("CELL idempotency_of_cross_calls: PASS");
     } else {
         println!("CELL idempotency_of_cross_calls: FAIL");
+        failures = failures + 1;
+    };
+    if run_escrow_cell() {
+        println!("CELL escrow_release_rules: PASS");
+    } else {
+        println!("CELL escrow_release_rules: FAIL");
+        failures = failures + 1;
+    };
+    if run_upgrade_safety_cell() {
+        println!("CELL upgrade_safety: PASS");
+    } else {
+        println!("CELL upgrade_safety: FAIL");
+        failures = failures + 1;
+    };
+    if run_ordering_cell() {
+        println!("CELL cross_call_ordering: PASS");
+    } else {
+        println!("CELL cross_call_ordering: FAIL");
         failures = failures + 1;
     };
     if failures == 0 {
