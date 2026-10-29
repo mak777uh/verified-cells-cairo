@@ -57,3 +57,28 @@ re-runnable, and the receipt makes the result falsifiable: change a line of the 
 | M2 | 3 more cells (escrow, upgrade safety, cross-call ordering) + adoption guide + recorded walkthrough |
 
 License: MIT.
+
+## Why these six, and what they map to on Starknet
+
+| cell | the real risk it mirrors |
+|---|---|
+`accounting_conservation` | vault/CDO accounting drift: shares outstanding no longer match assets held |
+`authorization_on_upgrade` | `upgrade` / `set_implementation` callable by a non-owner (often via a forgotten setter or a proxy admin path) |
+`idempotency_of_cross_calls` | a message executed twice after a retry/reorg — Starknet's L1↔L2 messaging makes retries normal, not exotic |
+`escrow_release_rules` | an escrow that pays before its deadline, or pays twice, or pays after cancellation |
+`upgrade_safety` | storage layout reordering between two versions of the same class — silent state reinterpretation |
+`cross_call_ordering` | interact-before-effect through a re-entrant callee (a contract that calls back into yours) |
+
+Each cell contains a **deliberately broken variant** where it makes sense (`upgrade_safety`,
+`cross_call_ordering`), and the test asserts the check catches it. A cell that cannot fail is decoration.
+
+## What a reviewer can check in one minute
+
+```bash
+git clone https://github.com/mak777uh/verified-cells-cairo
+cd verified-cells-cairo
+scarb execute --print-program-output   # six PASS lines
+python verify_receipt.py               # file hashes + statement hash
+```
+
+No account, no keys, no network access required beyond the clone.
