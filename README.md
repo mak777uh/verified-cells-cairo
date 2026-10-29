@@ -7,23 +7,25 @@ A **verified cell** is the smallest thing a reviewer can re-run without trusting
 3. a **manifest** pinning the toolchain,
 4. a **receipt** that binds the claim to a canonical hash.
 
-This repository holds the first cell for Cairo: **accounting conservation**.
+This repository holds two cells for Cairo: **accounting conservation** and **authorization on upgrade paths**.
 
 ## Run it (no account, no keys)
 
 ```bash
 scarb build
-scarb execute --print-program-output   # prints: CELL accounting_conservation: PASS
+scarb execute --print-program-output   # prints two PASS lines
 python make_receipt.py                 # writes RECEIPT.json
 python verify_receipt.py               # re-checks file hashes and the statement hash
 ```
 
 Pinned toolchain: **scarb 2.21.0 / cairo 2.21.0**.
 
-## What the cell claims
+## What the cells claim
 
-> For the sequence `deposit(alice,100) → deposit(bob,50) → withdraw(alice,30) → deposit(bob,7) →
-> withdraw(bob,17)`, the invariant `alice + bob == total` holds at the end.
+1. **accounting** — for `deposit(alice,100) → deposit(bob,50) → withdraw(alice,30) → deposit(bob,7) →
+   withdraw(bob,17)`, the invariant `alice + bob == total` holds at the end.
+2. **authorization** — a non-owner cannot change the implementation; the owner can, through
+   `propose` + `accept`, and no other path exists.
 
 ## What it does **not** claim
 

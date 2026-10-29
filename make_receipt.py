@@ -29,11 +29,14 @@ def main() -> int:
     run = subprocess.run([SCARB, "execute", "--print-program-output"], capture_output=True,
                          text=True, cwd=str(ROOT), timeout=300)
     out = (run.stdout or "") + (run.stderr or "")
-    verdict = "PASS" if "CELL accounting_conservation: PASS" in out else "FAIL"
+    verdict = "PASS" if out.count(": PASS") >= 2 and ": FAIL" not in out else "FAIL"
     file_hashes = {str(p.relative_to(ROOT)).replace("\\", "/"): sha(p) for p in files}
     receipt = {
-        "cell": "accounting_conservation",
-        "what_it_claims": "sum(balances) == total survives the stated deposit/withdraw sequence",
+        "cells": ["accounting_conservation", "authorization_on_upgrade"],
+        "what_it_claims": [
+            "accounting: sum(balances) == total survives the stated deposit/withdraw sequence",
+            "authorization: only the owner can change the implementation, through propose+accept",
+        ],
         "what_it_does_not_claim": [
             "does not verify deployed bytecode",
             "does not replace an audit",

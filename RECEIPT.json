@@ -1,6 +1,12 @@
 {
- "cell": "accounting_conservation",
- "what_it_claims": "sum(balances) == total survives the stated deposit/withdraw sequence",
+ "cells": [
+  "accounting_conservation",
+  "authorization_on_upgrade"
+ ],
+ "what_it_claims": [
+  "accounting: sum(balances) == total survives the stated deposit/withdraw sequence",
+  "authorization: only the owner can change the implementation, through propose+accept"
+ ],
  "what_it_does_not_claim": [
   "does not verify deployed bytecode",
   "does not replace an audit",
@@ -15,16 +21,17 @@
  "command": "scarb execute --print-program-output",
  "verdict": "PASS",
  "stdout_tail": [
-  "CELL accounting_conservation: PASS",
+  "CELL authorization_on_upgrade: PASS",
   "Program output:",
   "1346458451"
  ],
  "files": {
-  "src/lib.cairo": "1616a959de67fb4dd3bed4725d56dedccccb172be9c6e9098b6ea5b4663566f2",
+  "src/authz.cairo": "f54adcc5e94913ab7c944e7552f30c371fe4b054f10d4cff03fb61600e1fb399",
+  "src/lib.cairo": "6584125bdd45e8a315b75c10ce6112d1e69276c889242fea7f7b68de61433c79",
   "src/vault.cairo": "5786d44fe1b49e3f69d02e7d0fb74bf0dad08d0fe265ec189cbdca7ba2a16d9c",
   "Scarb.toml": "70ed4f0c88106bfbd26d8978a349d9893b7a51c34cc6ee53c5ad714ea3475f58"
  },
- "statement_sha256": "c470ee96c379ce12d57ace76eacde960e550a9a02469b120ac9a6f48567c3748",
- "generated_utc": "2026-10-29T16:41:03+00:00",
+ "statement_sha256": "541495832a35bf865ecac90018ec35195fe3692e005964e25fa0c2e2cd7b3e4e",
+ "generated_utc": "2026-10-29T16:46:27+00:00",
  "scarb_exit": 0
 }
