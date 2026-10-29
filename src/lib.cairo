@@ -4,8 +4,10 @@
 
 pub mod vault;
 pub mod authz;
+pub mod idempotency;
 
 use authz::run_authorization_cell;
+use idempotency::run_idempotency_cell;
 use vault::run_accounting_cell;
 
 /// Executable entry point: prints PASS/FAIL for every cell so a receipt binds to exact output.
@@ -22,6 +24,12 @@ fn main() -> felt252 {
         println!("CELL authorization_on_upgrade: PASS");
     } else {
         println!("CELL authorization_on_upgrade: FAIL");
+        failures = failures + 1;
+    };
+    if run_idempotency_cell() {
+        println!("CELL idempotency_of_cross_calls: PASS");
+    } else {
+        println!("CELL idempotency_of_cross_calls: FAIL");
         failures = failures + 1;
     };
     if failures == 0 {

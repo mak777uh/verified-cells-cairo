@@ -1,11 +1,13 @@
 {
  "cells": [
   "accounting_conservation",
-  "authorization_on_upgrade"
+  "authorization_on_upgrade",
+  "idempotency_of_cross_calls"
  ],
  "what_it_claims": [
   "accounting: sum(balances) == total survives the stated deposit/withdraw sequence",
-  "authorization: only the owner can change the implementation, through propose+accept"
+  "authorization: only the owner can change the implementation, through propose+accept",
+  "idempotency: delivering the same message id twice applies the effect once"
  ],
  "what_it_does_not_claim": [
   "does not verify deployed bytecode",
@@ -21,17 +23,18 @@
  "command": "scarb execute --print-program-output",
  "verdict": "PASS",
  "stdout_tail": [
-  "CELL authorization_on_upgrade: PASS",
+  "CELL idempotency_of_cross_calls: PASS",
   "Program output:",
   "1346458451"
  ],
  "files": {
   "src/authz.cairo": "f54adcc5e94913ab7c944e7552f30c371fe4b054f10d4cff03fb61600e1fb399",
-  "src/lib.cairo": "6584125bdd45e8a315b75c10ce6112d1e69276c889242fea7f7b68de61433c79",
+  "src/idempotency.cairo": "a64d60feb5313be7179ea9762367eee46e1429c79fcef11b6536b85bc68602fa",
+  "src/lib.cairo": "b94498eec5e94c2c48050bb8d493605ebc86f2413aec1d9dbc7935aee303d43a",
   "src/vault.cairo": "5786d44fe1b49e3f69d02e7d0fb74bf0dad08d0fe265ec189cbdca7ba2a16d9c",
   "Scarb.toml": "70ed4f0c88106bfbd26d8978a349d9893b7a51c34cc6ee53c5ad714ea3475f58"
  },
- "statement_sha256": "541495832a35bf865ecac90018ec35195fe3692e005964e25fa0c2e2cd7b3e4e",
- "generated_utc": "2026-10-29T16:46:27+00:00",
+ "statement_sha256": "5175250a497544bffbd71c2f83c870b0b82c9ffd25d368f46b792e6a012921e6",
+ "generated_utc": "2026-10-29T16:48:27+00:00",
  "scarb_exit": 0
 }

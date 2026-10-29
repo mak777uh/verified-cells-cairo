@@ -7,13 +7,13 @@ A **verified cell** is the smallest thing a reviewer can re-run without trusting
 3. a **manifest** pinning the toolchain,
 4. a **receipt** that binds the claim to a canonical hash.
 
-This repository holds two cells for Cairo: **accounting conservation** and **authorization on upgrade paths**.
+This repository holds three cells for Cairo: **accounting conservation**, **authorization on upgrade paths** and **idempotency of cross-contract calls** — the three classes named in milestone 1.
 
 ## Run it (no account, no keys)
 
 ```bash
 scarb build
-scarb execute --print-program-output   # prints two PASS lines
+scarb execute --print-program-output   # prints three PASS lines
 python make_receipt.py                 # writes RECEIPT.json
 python verify_receipt.py               # re-checks file hashes and the statement hash
 ```
@@ -26,6 +26,8 @@ Pinned toolchain: **scarb 2.21.0 / cairo 2.21.0**.
    withdraw(bob,17)`, the invariant `alice + bob == total` holds at the end.
 2. **authorization** — a non-owner cannot change the implementation; the owner can, through
    `propose` + `accept`, and no other path exists.
+3. **idempotency** — delivering the same message id three times applies the credit once, and a
+   different id still works (the counter does not stick).
 
 ## What it does **not** claim
 
