@@ -88,3 +88,9 @@ python verify_receipt.py               # file hashes + statement hash
 ```
 
 No account, no keys, no network access required beyond the clone.
+
+## Recorded walkthrough
+
+`media/walkthrough.mp4` — 20 seconds, no slides: `scarb execute` printing six PASS lines, then
+`make_receipt.py` writing the statement hash, then `verify_receipt.py` re-checking it. The narration says
+what the cells do not claim, because that is part of the result.
