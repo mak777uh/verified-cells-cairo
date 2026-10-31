@@ -27,6 +27,25 @@ def sha(p: pathlib.Path) -> str:
     return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
+# Какую функцию реального контракта моделирует каждая ячейка.
+# Селектор Starknet — это keccak256(имя) по модулю 2**250; он не зависит от контракта,
+# поэтому его можно записать заранее и проверить у любого, кто знает имя.
+CELL_MODELS = {
+    "accounting_conservation": "transfer",
+    "authorization_on_upgrade": "upgrade",
+    "idempotency_of_cross_calls": "execute",
+    "escrow_release_rules": "withdraw",
+    "upgrade_safety": "upgrade",
+    "cross_call_ordering": "execute",
+}
+
+
+def selector(name: str) -> str:
+    """Селектор точки входа Starknet: keccak256(имя) & (2**250 - 1)."""
+    from eth_hash.auto import keccak
+    return "0x%064x" % (int.from_bytes(keccak(name.encode()), "big") & ((1 << 250) - 1))
+
+
 def bind(chain_rpc: str, address: str) -> dict:
     """Первый шаг M3: привязать квитанцию к реальному развёрнутому контракту.
 
@@ -99,6 +118,7 @@ def main() -> int:
         "command": "scarb execute --print-program-output",
         "verdict": verdict,
         "stdout_tail": out.strip().splitlines()[-3:],
+        "models": {cell: {"function": fn, "selector": selector(fn)} for cell, fn in CELL_MODELS.items()},
         "files": file_hashes,
         "statement_sha256": hashlib.sha256(
             json.dumps(file_hashes, sort_keys=True).encode()
