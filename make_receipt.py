@@ -20,7 +20,11 @@ SCARB = r"C:\111\env\bin\scarb\scarb-v2.21.0-x86_64-pc-windows-msvc\bin\scarb.ex
 
 
 def sha(p: pathlib.Path) -> str:
-    return hashlib.sha256(p.read_bytes()).hexdigest()
+    # Хеш считается по содержимому с LF-переводами строк.
+    # 31.10.2026: на Windows git выкладывает файлы с CRLF, и сырой sha256 не совпадал
+    # с квитанцией у всех, кто клонировал репозиторий, хотя содержимое то же.
+    # Квитанция, которая не воспроизводится на другой платформе, — не квитанция.
+    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def main() -> int:
