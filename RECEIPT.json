@@ -44,6 +44,14 @@
   "Scarb.toml": "70ed4f0c88106bfbd26d8978a349d9893b7a51c34cc6ee53c5ad714ea3475f58"
  },
  "statement_sha256": "3af70404ba71f894e9c89ad04f3c9a4ebc8fc1895b56d1649bd0e3841e3239c0",
- "generated_utc": "2026-10-31T00:26:30+00:00",
- "scarb_exit": 0
+ "generated_utc": "2026-10-31T00:32:39+00:00",
+ "scarb_exit": 0,
+ "bound_to": {
+  "chain": "starknet-mainnet",
+  "rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+  "address": "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+  "class_hash": "0x2e77ee61d4df3d988ee1f42ea5442e913862cc82c2584d212ecda76666498fc",
+  "block_number": 17203417,
+  "note": "address/class_hash/block are what the chain returned at build time; this does NOT assert that the cell models this contract's bytecode — see what_it_does_not_claim"
+ }
 }
